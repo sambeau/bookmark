@@ -5,8 +5,8 @@ import (
 	"io/fs"
 	"log"
 	"os"
-	"strings"
 	"path/filepath"
+	"strings"
 )
 
 type nodeType int
@@ -17,24 +17,24 @@ const (
 )
 
 type Exporter interface {
-	Export() string	
+	Export() string
 }
 
 type Node struct {
-	Class   nodeType
-	Name    string
-	Path    string
-	Doc     *Doc
-	Parent  interface{}
+	Class  nodeType
+	Name   string
+	Path   string
+	Doc    *Doc
+	Parent interface{}
 	// Scope   string // for now
 }
 
-func NewNode(class nodeType, name string, path string,doc *Doc, parent interface{}) Node {
+func NewNode(class nodeType, name string, path string, doc *Doc, parent interface{}) Node {
 	return Node{
-		Class: class,
-		Name: name,
-		Path: path,
-		Doc: doc,
+		Class:  class,
+		Name:   name,
+		Path:   path,
+		Doc:    doc,
 		Parent: parent,
 	}
 }
@@ -52,8 +52,8 @@ func (f File) Export() string {
 	return f.Contents + "\n"
 }
 
-func NewFile(name string, path string, doc *Doc, parent interface{})(File,error) {
-	contents, err := os.ReadFile(filepath.Join(doc.RootPath,path))
+func NewFile(name string, path string, doc *Doc, parent interface{}) (File, error) {
+	contents, err := os.ReadFile(filepath.Join(doc.RootPath, path))
 	if err != nil {
 		return File{}, err
 	}
@@ -65,9 +65,9 @@ type Folder struct {
 	Children map[string]interface{}
 }
 
-func (f Folder) Export()  string {
+func (f Folder) Export() string {
 	s := ""
-	for _,n := range f.Children {
+	for _, n := range f.Children {
 		s += n.(Exporter).Export()
 	}
 	return s
@@ -75,7 +75,7 @@ func (f Folder) Export()  string {
 
 func NewFolder(name string, path string, doc *Doc, parent interface{}) *Folder {
 	return &Folder{
-		Node: NewNode(FOLDER, name, path,doc,parent),
+		Node:     NewNode(FOLDER, name, path, doc, parent),
 		Children: make(map[string]interface{}),
 	}
 }
@@ -85,7 +85,7 @@ type Doc struct {
 	RootPath string
 }
 
-func (doc *Doc) Export()  {
+func (doc *Doc) Export() {
 	fmt.Println("Export for", doc.RootPath)
 	fmt.Println(doc.Folder.Export())
 }
@@ -102,25 +102,24 @@ func NewDoc(path string) (Doc, error) {
 	return doc, nil
 }
 
-func (doc *Doc) FindParentFolder(path string) *Folder {	
+func (doc *Doc) FindParentFolder(path string) *Folder {
 	pathArray := strings.Split(filepath.Clean(path), string(os.PathSeparator))
 	parentArray := pathArray[:len(pathArray)-1] // pop
 
 	currFolder := doc.Folder
 
 	for len(parentArray) > 0 {
-		// shift: x, a = a[0], a[1:]		
+		// shift: x, a = a[0], a[1:]
 		child, ok := doc.Folder.Children[parentArray[0]]
 		if !ok {
-			break;
-		}		
+			break
+		}
 		currFolder = child.(*Folder)
 		parentArray = parentArray[1:]
 	}
 
 	return currFolder
 }
-
 
 func (doc *Doc) addDirectory(path string) {
 	name := filepath.Base(path)
@@ -170,6 +169,6 @@ func main() {
 		}
 		return nil
 	})
-	
+
 	doc.Export()
 }
