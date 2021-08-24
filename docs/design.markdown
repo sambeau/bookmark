@@ -2,6 +2,7 @@
 Name: Bookmark Design
 Version: 0.1
 ---
+
 # Bookmark
 
 ## Introduction
@@ -89,7 +90,7 @@ Bookmark adds 3 main things to Markdown
 
 What Bookmark does not supply:
 
-- A markdown renderer.
+-   A markdown renderer.
 
 Bookmark compiles to a single Markdown file that can then be rendered by a markdown renderer.
 
@@ -97,23 +98,23 @@ Bookmark compiles to a single Markdown file that can then be rendered by a markd
 
 Bookmark offers two styles of file extension to match the two common styles of markdown file extension. They are equivalent so pick whichever you prefer, or mix and match if you are wild and carefree.
 
-	.bm
-	.bookmark
+    .bm
+    .bookmark
 
 #### Use of Markdown file extensions
 
-Being that most text editors will not recognise bookmark files, bookmark will work with Markdown files. 
+Being that most text editors will not recognise bookmark files, bookmark will work with Markdown files.
 
-	.md
-	.markdown
+    .md
+    .markdown
 
 However, it is important to note that, once you add Bookdown-specific markup, these files will no longer be in Markdown format.
 
 ### Folder metadata
 
-The main purpose of folder metadata is to specify the order of files in a folder. This data is held in a list in a [Sidecar file][sidecar file]. The default name for this file is 
+The main purpose of folder metadata is to specify the order of files in a folder. This data is held in a list in a [Sidecar file][sidecar file]. The default name for this file is
 
-	_index.bm
+    _index.bm
 
 We chose this name, despite the ugly underscore, so it will always appear at the top of file listings. However you can change this filename for your project.
 
@@ -121,37 +122,43 @@ To add an order to a folder you list the files in the order you want as markdown
 
 A folder with 4 files would alphabetically order like this:
 
-	Chapter Four.md
-	Chapter One.md
-	Chapter Three.md
-	Chapter Two.md
+    Chapter Four.md
+    Chapter One.md
+    Chapter Three.md
+    Chapter Two.md
 
-But can be ordered by adding a _folder.bm file
+But can be ordered by adding a \_folder.bm file
 
-	- Chapter One.md
-	- Chapter Two.md
-	- Chapter Three.md
-	- Chapter Four.md
+    - Chapter One.md
+    - Chapter Two.md
+    - Chapter Three.md
+    - Chapter Four.md
 
 We deliberately chose an unordered list format for two reasons:
 
 1. It’s easy to move them around and delete entries without the numbers getting ugly
 2. It’s a list
 
-To remove a file from the listing without it reaapearing every time you automatically update the indexes, strikethough it’s listing in the _folder.bm file.
+To remove a file from the listing without it reappearing every time you automatically update the indexes, strikethrough it’s listing in the \_folder.bm file.
 
-	- Chapter One.md
-	- ~~Chapter Two.md~~
-	- Chapter Three.md
-	- Chapter Four.md
+    - Chapter One.md
+    - ~~Chapter Two.md~~
+    - Chapter Three.md
+    - Chapter Four.md
 
-[Sidecar file]:https://en.wikipedia.org/wiki/sidecar_file
+[sidecar file]: https://en.wikipedia.org/wiki/sidecar_file
 
 #### Folder Front Matter
 
 Folder sidecar files can contain metadata definitions in a front-matter section. They are useful for storing values that can be used to store information about all the files in the folder, or to provide values to be used in all the files in the folder, for instance author name, latest version, dates etc.
 
 For more about Front Matter, see below.
+
+#### Project Metadata/Settings
+
+    _document.bm
+
+Do we need any special Project metadata requiring a special project folder sidecar file? It's not clear to me which bits of data would be in that folder and which would be in the command that initiates the compilation. Once you have a settings file like that it would seem to me a better place for it to live (less to remember, less chance of things going wrong). Templates, script locations, author etc etc would be better there than anywhere else.
 
 ### File metadata
 
@@ -163,11 +170,11 @@ For more about Front Matter, see below.
 
 Bookmark adds a few new markup tags on top of the regular Markdown syntax.
 
-All of Bookmark’s markup tags are denoted by square brackets. 
+All of Bookmark’s markup tags are denoted by square brackets.
 
 They look like this:
 
-	[@variable] [#tag] [+caps]Make me bigger[-caps]
+    [@variable] [#tag] [+caps]Make me bigger[-caps]
 
 The contents of the markup tags always begin with punctuation tag to ensure they don’t class with any Markdown syntax.
 
@@ -176,32 +183,31 @@ They take two forms:
 1. Inserts
 2. Spans
 
-
 #### Inserts
 
-An *insert* is a single tag make single point in a file to insert text into the Markdown text (e.g. a date) or  to mark a place for the system to find at some point (e.g. a hashtag).
+An _insert_ is a single tag make single point in a file to insert text into the Markdown text (e.g. a date) or to mark a place for the system to find at some point (e.g. a hashtag).
 
 Using an insert looks like this:
 
-	This document was generated at: [@date], [@time]
+    This document was generated at: [@date], [@time]
 
-Inserts are, mostly, used for inserting the value of a variable Ito the markdown. These can be defined by the system (e.g. a date or a filename) or in the *metadata cascade* of folder metadata and Front Matter  from the Project file, each parent folder and the Front Matter from the file itself. Inserts can also be used to insert calculations or the results of dynamic searches.
+Inserts are, mostly, used for inserting the value of a variable Ito the markdown. These can be defined by the system (e.g. a date or a filename) or in the _metadata cascade_ of folder metadata and Front Matter from the Project file, each parent folder and the Front Matter from the file itself. Inserts can also be used to insert calculations or the results of dynamic searches.
 
 Built-in values to insert include:
 
-- date: when the output document was generated
-- lastmod: when this file was last edited
-- created: when this file was created
-- filename: the name of the file being processed
+-   date: when the output document was generated
+-   lastmod: when this file was last edited
+-   created: when this file was created
+-   filename: the name of the file being processed
 
 #### Spans
 
-*Spans* mark a section of text with a beginning and end. They are used to transform a section of text or to mark a span of text that can be queried for.
+_Spans_ mark a section of text with a beginning and end. They are used to transform a section of text or to mark a span of text that can be queried for.
 
 A span looks like this:
 
-	[+scaps]This text should be transformed into small-caps[-scaps]
-	
-A span can	 also take a list of arguments, e.g.
+    [+scaps]This text should be transformed into small-caps[-scaps]
 
-	[+tag draft revisit]Text needing a revision…[-tag]
+A span can also take a list of arguments, e.g.
+
+    [+tag draft revisit]Text needing a revision…[-tag]
